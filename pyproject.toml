@@ -15,3 +15,7 @@ dependencies = [
     "sentence-transformers>=5.2.3",
     "skrub>=0.7.1",
 ]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["src*"]
