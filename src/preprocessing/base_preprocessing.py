@@ -54,6 +54,12 @@ class BasePreprocess:
                                .select_dtypes(include="object")
                                .columns.tolist() )
         
+        ###########################################
+        # Extraer mes y año de variables temporales
+        ###########################################
+        self.train_X_data['earliest_cr_line'] = pd.to_datetime(self.train_X_data['earliest_cr_line'])
+        self.train_X_data['earliest_cr_line_year'] = self.train_X_data['earliest_cr_line'].dt.year
+        self.train_X_data['earliest_cr_line_month'] = self.train_X_data['earliest_cr_line'].dt.month.astype(str)
 
         ###################################
         # procesamos variables categóricas
@@ -118,6 +124,13 @@ class BasePreprocess:
                 X_data[var] = X_data[var].fillna("DESCONOCIDO")
             else:
                 X_data[var] = X_data[var].fillna(-1)
+        
+        ###########################################
+        # Extraer mes y año de variables temporales
+        ###########################################
+        X_data['earliest_cr_line'] = pd.to_datetime(X_data['earliest_cr_line'])
+        X_data['earliest_cr_line_year'] = X_data['earliest_cr_line'].dt.year
+        X_data['earliest_cr_line_month'] = X_data['earliest_cr_line'].dt.month.astype(str)
         
         # tratamiento de variables categóricas
         
