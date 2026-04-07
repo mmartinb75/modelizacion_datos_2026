@@ -4,6 +4,7 @@ from skrub import TextEncoder
 import numpy as np
 from sklearn.preprocessing import QuantileTransformer
 from skrub import SquashingScaler
+from sklearn.preprocessing import PolynomialFeatures
 
 class BasePreprocess:
 
@@ -14,6 +15,7 @@ class BasePreprocess:
                                     .variable
                                     .tolist())
         self.target_var = target
+        self.poly = None
 
     def fit(self,data):
         # leemos dataframe
@@ -79,6 +81,20 @@ class BasePreprocess:
         self.ohe = OneHotEncoder(sparse_output=False, handle_unknown="ignore")
         self.ohe.fit(self.train_X_data[self.ohe_vars_low])
 
+
+
+        #############################
+        # transformación variables numéricas
+        ###################################
+
+        self.numeric_vars = ( self.train_X_data
+                             .loc[:, ~self.train_X_data.columns.isin(self.var_with_most_nulls)]
+                             .select_dtypes(include='number')
+                              .columns.tolist() )
+        
+        self.quantile_transformer = QuantileTransformer(output_distribution='normal')
+        self.quantile_transformer.fit(self.train_X_data[self.numeric_vars])
+
         # Aplicamos el fit de variables de texto.
         
         self.text_enc_title = TextEncoder(model_name='intfloat/e5-small-v2', n_components=20)
@@ -92,18 +108,6 @@ class BasePreprocess:
         
         self.text_enc_desc = TextEncoder(model_name='intfloat/e5-small-v2', n_components=20)
         self.text_enc_desc.fit(self.train_X_data['desc_formated'])
-
-        #############################
-        # transformación variables numéricas
-        ###################################
-
-        self.numeric_vars = ( self.train_X_data
-                             .loc[:, ~self.train_X_data.columns.isin(self.var_with_most_nulls)]
-                             .select_dtypes(include='number')
-                              .columns.tolist() )
-        
-        self.quantile_transformer = QuantileTransformer(output_distribution='normal')
-        self.quantile_transformer.fit(self.train_X_data[self.numeric_vars])
     
     def transform(self, data):
         df = pd.read_csv(data)
@@ -155,12 +159,30 @@ class BasePreprocess:
 
         X_num_data = pd.DataFrame(X_num_data, columns=self.numeric_vars)
 
+        #############################
+        # añadimos features cruzadas
+        ##############################
+        # Solo aplicamos polinomio a variables numéricas para evitar
+        # la explosión de features con OHE (la mayoría serían 0).
+
+        if (self.poly == None):
+            self.poly = PolynomialFeatures(degree=2, interaction_only=True, include_bias=False)
+            self.poly.fit(X_num_data)
+
+
+        X_cross_data = self.poly.transform(X_num_data)
+
+        X_cross_data = pd.DataFrame(X_cross_data,
+                      columns=self.poly.get_feature_names_out(X_num_data.columns))
+        
+
         # concatenar datos para X_data
 
-        X_data_ouput = pd.concat([X_ohe_data,
+        X_data_ouput = pd.concat([
+                    X_ohe_data,
                     X_text_title,
                     X_text_desc,
-                    X_num_data],
+                    X_cross_data],
                    axis=1)
         
         # transformar y_data
