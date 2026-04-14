@@ -1,3 +1,7 @@
 *.csv
+*.pkl
 *ref.py
 *ref.ipynb
+.DS_Store
+~$*
+catboost_info/
