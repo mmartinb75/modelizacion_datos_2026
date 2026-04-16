@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Practica 1</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      white-space: pre-wrap;
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">Practica 1</h1>
+</header>
+<h1
+id="practica-1-pipeline-completo-de-machine-learning-para-deteccion-de-impago">Practica
+1: Pipeline completo de Machine Learning para deteccion de impago</h1>
+<h2 id="contexto">Contexto</h2>
+<p>En clase hemos construido un pipeline end-to-end de Machine Learning
+para predecir si un cliente devolvera su prestamo o no (deteccion de
+impago). Este pipeline incluye:</p>
+<ol type="1">
+<li><strong>Preprocesamiento</strong>
+(<code>src/preprocessing/base_preprocessing.py</code>): clase
+<code>BasePreprocess</code> que se encarga de:
+<ul>
+<li>Tratamiento de valores nulos (eliminacion, imputacion por
+mediana/moda, valor centinela -1).</li>
+<li>Encoding de variables categoricas con <code>OneHotEncoder</code>
+(cardinalidad &lt;= 50).</li>
+<li>Encoding de variables de texto libre con <code>TextEncoder</code>
+(modelo e5-small-v2).</li>
+<li>Normalizacion de variables numericas con
+<code>QuantileTransformer</code> (distribucion normal).</li>
+<li>Generacion de features cruzadas con <code>PolynomialFeatures</code>
+(interacciones de grado 2 entre numericas).</li>
+</ul></li>
+<li><strong>Filtrado de features</strong>
+(<code>src/filtering/base_filtering.py</code>): clase
+<code>BaseFiltering</code> que aplica:
+<ul>
+<li><code>DropConstantFeatures</code>: elimina features cuasi-constantes
+(tol=0.9).</li>
+<li><code>DropCorrelatedFeatures</code>: elimina features con
+correlacion de Pearson &gt; 0.8.</li>
+<li><code>ProbeFeatureSelection</code>: elimina features menos
+importantes que ruido aleatorio.</li>
+</ul></li>
+<li><strong>Notebook de referencia</strong>
+(<code>04_preprocessing_filtering_model.ipynb</code>): notebook que
+encadena preprocesamiento, filtrado, entrenamiento de un Random Forest y
+evaluacion.</li>
+</ol>
+<p><strong>Importante</strong>: el pipeline de referencia utiliza el
+fichero <code>data/variables_withoutExperts.xlsx</code>, que
+<strong>excluye</strong> las variables que provienen de evaluaciones de
+expertos (como el grado de riesgo, el FICO score, la tasa de interes
+asignada, etc.). El fichero <code>data/variables_withExperts.xlsx</code>
+incluye todas las variables, tambien las de expertos.</p>
+<hr />
+<h2 id="objetivo-de-la-practica">Objetivo de la practica</h2>
+<p>Crear un <strong>pipeline alternativo completo</strong> con vuestras
+propias decisiones de preprocesamiento, filtrado y modelado, y comparar
+el rendimiento de <strong>tres familias de modelos</strong>
+diferentes.</p>
+<hr />
+<h2 id="entrega">Entrega</h2>
+<p>La practica se entregara a traves de un <strong>repositorio
+Git</strong> (GitHub, GitLab o similar). Se debe entregar la <strong>URL
+del repositorio</strong>. El repositorio debe contener todos los
+ficheros del proyecto, incluyendo los 4 ficheros indicados a
+continuacion.</p>
+<p><strong>Requisitos del repositorio:</strong> - El repositorio debe
+ser accesible por el profesor (publico o con permisos de lectura). - El
+notebook debe estar subido <strong>ya ejecutado</strong> (con las celdas
+de salida visibles) para poder revisar los resultados sin necesidad de
+re-ejecutar.</p>
+<h2 id="ficheros-a-entregar">Ficheros a entregar</h2>
+<h3
+id="clase-de-preprocesamiento-srcpreprocessingpractica1_preprocessing.py">1.
+Clase de preprocesamiento:
+<code>src/preprocessing/practica1_preprocessing.py</code></h3>
+<p>Crear una clase <code>Practica1Preprocess</code> que siga el patron
+<strong>fit/transform</strong> (igual que <code>BasePreprocess</code>) y
+que incluya las siguientes diferencias respecto a la clase base:</p>
+<ul>
+<li><strong>Variables</strong>: utilizar el fichero
+<code>data/variables_withExperts.xlsx</code> para incluir tambien las
+variables de evaluacion de expertos (grade, sub_grade, int_rate,
+installment, fico_range_low, fico_range_high, etc.).</li>
+<li><strong>Imputacion de missings</strong>: utilizar al menos un
+mecanismo de imputacion <strong>diferente</strong> al de la clase base,
+usando metodos de <strong>scikit-learn</strong> o
+<strong>feature-engine</strong>. Ejemplos:
+<ul>
+<li><code>sklearn.impute.KNNImputer</code> (imputacion por vecinos
+cercanos).</li>
+<li><code>sklearn.impute.IterativeImputer</code> (imputacion
+multiple/MICE).</li>
+<li><code>sklearn.impute.SimpleImputer</code> con estrategia diferente
+(most_frequent, constant, etc.).</li>
+<li>Cualquier otro metodo de scikit-learn o feature-engine
+justificado.</li>
+</ul></li>
+<li><strong>Procesamiento de variables categoricas</strong>: utilizar al
+menos un mecanismo <strong>diferente</strong> a
+<code>OneHotEncoder</code>, usando metodos de
+<strong>scikit-learn</strong> o <strong>feature-engine</strong>.
+Ejemplos:
+<ul>
+<li><code>sklearn.preprocessing.TargetEncoder</code> (encoding basado en
+la media del target por categoria).</li>
+<li><code>sklearn.preprocessing.OrdinalEncoder</code> (para variables
+con orden natural, como grade A-G).</li>
+<li><code>feature_engine.encoding.CountFrequencyEncoder</code> (encoding
+por frecuencia).</li>
+<li><code>feature_engine.encoding.MeanEncoder</code> (encoding por media
+del target).</li>
+<li>Cualquier otro metodo de scikit-learn o feature-engine
+justificado.</li>
+</ul></li>
+<li><strong>Procesamiento de variables numericas</strong>: utilizar al
+menos un mecanismo <strong>diferente</strong> a
+<code>QuantileTransformer</code>, usando metodos de
+<strong>scikit-learn</strong> o <strong>feature-engine</strong>.
+Ejemplos:
+<ul>
+<li><code>sklearn.preprocessing.StandardScaler</code> (estandarizacion
+z-score).</li>
+<li><code>sklearn.preprocessing.RobustScaler</code> (escalado basado en
+mediana e IQR, robusto a outliers).</li>
+<li><code>sklearn.preprocessing.PowerTransformer</code> (transformacion
+de Box-Cox o Yeo-Johnson).</li>
+<li><code>sklearn.preprocessing.MinMaxScaler</code>.</li>
+<li>Cualquier otro metodo de scikit-learn o feature-engine
+justificado.</li>
+</ul></li>
+<li><strong>Generacion de nuevas features</strong>: utilizar al menos un
+mecanismo <strong>diferente</strong> a <code>PolynomialFeatures</code>.
+Ejemplos:
+<ul>
+<li>Ratios financieros: <code>deuda_total / ingreso_anual</code>,
+<code>cuota / ingreso_mensual</code>,
+<code>balance_revolving / limite_credito</code>.</li>
+<li>Agregaciones: combinar fico_range_low y fico_range_high en un
+fico_medio.</li>
+<li>Binning: discretizar variables continuas en rangos (ej: tramos de
+ingreso).</li>
+<li>Features basadas en dominio bancario.</li>
+<li>Cualquier otro metodo justificado.</li>
+</ul></li>
+</ul>
+<h3 id="clase-de-filtrado-srcfilteringpractica1_filtering.py">2. Clase
+de filtrado: <code>src/filtering/practica1_filtering.py</code></h3>
+<p>Crear una clase <code>Practica1Filtering</code> que siga el patron
+<strong>fit/transform</strong> (igual que <code>BaseFiltering</code>) y
+que incluya al menos un mecanismo de filtrado
+<strong>diferente</strong>. Ejemplos:</p>
+<ul>
+<li><code>sklearn.feature_selection.SelectKBest</code> con test
+estadistico (chi2, mutual_info_classif, f_classif).</li>
+<li><code>sklearn.feature_selection.SelectFromModel</code> con
+importancias de un modelo (ej: Lasso, Random Forest).</li>
+<li><code>sklearn.feature_selection.VarianceThreshold</code> (filtrado
+por varianza).</li>
+<li><code>feature_engine.selection.SelectByShuffling</code> (seleccion
+por importancia al permutar features).</li>
+<li><code>feature_engine.selection.RecursiveFeatureElimination</code>
+(RFE) con un modelo ligero.</li>
+<li><code>feature_engine.selection.SelectByInformationValue</code>
+(seleccion por Information Value).</li>
+<li>Cualquier combinacion de metodos de scikit-learn o feature-engine
+justificada.</li>
+</ul>
+<p><strong>Nota</strong>: se pueden combinar multiples filtros en
+secuencia, al igual que hace <code>BaseFiltering</code>.</p>
+<h3 id="notebook-practica1_notebook.ipynb">3. Notebook:
+<code>practica1_notebook.ipynb</code></h3>
+<p>Crear un notebook que ejecute el pipeline completo:</p>
+<h4 id="preprocesamiento-y-filtrado">3.1 Preprocesamiento y
+filtrado</h4>
+<ul>
+<li>Instanciar <code>Practica1Preprocess</code> con
+<code>data/variables_withExperts.xlsx</code>.</li>
+<li>Hacer <code>fit()</code> en train y <code>transform()</code> en
+train y test.</li>
+<li>Instanciar <code>Practica1Filtering</code>.</li>
+<li>Hacer <code>fit()</code> en train y <code>transform()</code> en
+train y test.</li>
+<li>Mostrar las dimensiones en cada paso.</li>
+</ul>
+<h4 id="entrenamiento-de-3-modelos-uno-de-cada-familia">3.2
+Entrenamiento de 3 modelos (uno de cada familia)</h4>
+<p>Entrenar <strong>tres modelos</strong>, uno de cada familia:</p>
+<ol type="1">
+<li><strong>Ensemble de arboles de decision</strong>:
+<code>sklearn.ensemble.GradientBoostingClassifier</code>,
+<code>sklearn.ensemble.RandomForestClassifier</code>,
+<code>sklearn.ensemble.AdaBoostClassifier</code>, o
+<code>sklearn.ensemble.HistGradientBoostingClassifier</code>.</li>
+<li><strong>Maquinas de Soporte Vectorial (SVM)</strong>:
+<code>sklearn.svm.SVC</code> con algun kernel (rbf, poly, sigmoid). Usar
+<code>probability=True</code> para poder calcular PR-AUC.</li>
+<li><strong>Redes neuronales</strong>:
+<code>sklearn.neural_network.MLPClassifier</code>.</li>
+</ol>
+<p><strong>Notas sobre los modelos</strong>: - No se pide optimizacion
+exhaustiva de hiperparametros. Elegir parametros razonables e iterar 2-3
+veces como maximo si los resultados iniciales son muy malos. - Para SVM:
+tener en cuenta que puede ser lento con muchos datos. Si es necesario,
+reducir el dataset de entrenamiento con un sample. - Recordar configurar
+<code>random_state</code> donde sea posible para reproducibilidad.</p>
+<h4 id="evaluacion">3.3 Evaluacion</h4>
+<p>Para <strong>cada uno de los 3 modelos</strong>, calcular y mostrar
+las siguientes metricas en el <strong>conjunto de test</strong>:</p>
+<ul>
+<li><strong>Accuracy</strong>.</li>
+<li><strong>Precision</strong> de la clase de impago (Default = True =
+clase 1).</li>
+<li><strong>Recall</strong> de la clase de impago.</li>
+<li><strong>PR-AUC</strong> (Area Under the Precision-Recall Curve). A
+diferencia de ROC-AUC, PR-AUC es mas informativa cuando las clases estan
+desbalanceadas porque se centra en el rendimiento de la clase
+minoritaria.</li>
+</ul>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> precision_recall_curve, auc</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>precision_vals, recall_vals, _ <span class="op">=</span> precision_recall_curve(y_test, prob_predicted)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>pr_auc <span class="op">=</span> auc(recall_vals, precision_vals)</span></code></pre></div>
+<h4 id="comparacion-con-el-modelo-base">3.4 Comparacion con el modelo
+base</h4>
+<p>Incluir una <strong>comparacion explicita</strong> de los resultados
+de los 3 modelos contra el <strong>modelo base de referencia</strong>
+construido en clase (<code>03_modelo_base.ipynb</code>). Recordar que el
+modelo base utiliza unicamente el FICO score normalizado con un umbral
+de 0.67 y obtiene:</p>
+<ul>
+<li>Accuracy: ~72%</li>
+<li>Precision (impago): ~26%</li>
+<li>Recall (impago): ~24%</li>
+</ul>
+<p>Se debe: - Incluir las metricas del modelo base en la <strong>tabla
+comparativa</strong> junto a las de los 3 modelos (4 filas en total:
+modelo base + 3 modelos). - Comentar en que metricas se supera (o no) al
+modelo base y por cuanto margen. - Reflexionar: si algun modelo no
+supera al modelo base en alguna metrica concreta, explicar por que puede
+estar ocurriendo y que se podria hacer para mejorarlo.</p>
+<h4 id="comentarios-y-justificaciones">3.5 Comentarios y
+justificaciones</h4>
+<p>El notebook debe incluir comentarios que expliquen: - Por que se
+eligio cada tecnica de preprocesamiento/filtrado. - Que parametros se
+usaron en cada modelo y por que. - Interpretacion de las metricas
+obtenidas.</p>
+<h3 id="fichero-de-variables-usar-datavariables_withexperts.xlsx">4.
+Fichero de variables: usar
+<code>data/variables_withExperts.xlsx</code></h3>
+<p>No es necesario modificar este fichero. Simplemente usarlo como
+entrada al constructor de <code>Practica1Preprocess</code> en lugar de
+<code>variables_withoutExperts.xlsx</code>.</p>
+<hr />
+<h2 id="notas-tecnicas">Notas tecnicas</h2>
+<ul>
+<li>Los datos de entrenamiento estan en
+<code>data/df_train_small.csv</code> y los de test en
+<code>data/df_test_small.csv</code>.</li>
+<li>La variable target es <code>loan_status</code>. La clase positiva (1
+= impago) corresponde a <code>loan_status != 'Fully Paid'</code>.</li>
+<li>Las clases estan desbalanceadas (~80% Fully Paid vs ~20% Default).
+Tenerlo en cuenta a la hora de configurar los modelos
+(<code>class_weight='balanced'</code>, <code>scale_pos_weight</code>,
+etc.).</li>
+<li>El patron fit/transform es <strong>fundamental</strong>: todo lo que
+se aprenda (medianas, encoders, scalers, filtros) debe ajustarse SOLO en
+train y aplicarse en train y test. Esto evita data leakage.</li>
+<li><strong>Librerias permitidas</strong>: utilizar exclusivamente
+<strong>scikit-learn</strong> y <strong>feature-engine</strong> para
+preprocesamiento, filtrado y modelos. Para visualizacion se puede usar
+<strong>matplotlib</strong> y <strong>seaborn</strong>. Para
+manipulacion de datos, <strong>pandas</strong> y
+<strong>numpy</strong>.</li>
+</ul>
+<hr />
+<h2 id="rubrica-de-puntuacion-sobre-10">Rubrica de puntuacion (sobre
+10)</h2>
+<h3 id="preprocesamiento-3-puntos">Preprocesamiento (3 puntos)</h3>
+<table>
+<colgroup>
+<col style="width: 32%" />
+<col style="width: 25%" />
+<col style="width: 41%" />
+</colgroup>
+<thead>
+<tr>
+<th>Criterio</th>
+<th>Puntos</th>
+<th>Descripcion</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Estructura fit/transform correcta</td>
+<td>0.5</td>
+<td>La clase sigue el patron fit/transform sin data leakage. El fit se
+realiza solo en train.</td>
+</tr>
+<tr>
+<td>Inclusion de variables de expertos</td>
+<td>0.5</td>
+<td>Se usa <code>variables_withExperts.xlsx</code> y se procesan
+correctamente las variables adicionales (grade, sub_grade, fico,
+int_rate, etc.).</td>
+</tr>
+<tr>
+<td>Imputacion de missings alternativa</td>
+<td>0.5</td>
+<td>Se implementa al menos un metodo de imputacion diferente al de la
+clase base, correctamente aplicado.</td>
+</tr>
+<tr>
+<td>Procesamiento categoricas alternativo</td>
+<td>0.5</td>
+<td>Se implementa al menos un encoding diferente a OneHotEncoder,
+correctamente aplicado.</td>
+</tr>
+<tr>
+<td>Procesamiento numericas alternativo</td>
+<td>0.5</td>
+<td>Se implementa al menos un scaler/transformador diferente a
+QuantileTransformer, correctamente aplicado.</td>
+</tr>
+<tr>
+<td>Generacion de nuevas features</td>
+<td>0.5</td>
+<td>Se implementa al menos un mecanismo de generacion de features
+diferente a PolynomialFeatures (ratios, binning, agregaciones,
+etc.).</td>
+</tr>
+</tbody>
+</table>
+<h3 id="filtrado-1.5-puntos">Filtrado (1.5 puntos)</h3>
+<table>
+<colgroup>
+<col style="width: 32%" />
+<col style="width: 25%" />
+<col style="width: 41%" />
+</colgroup>
+<thead>
+<tr>
+<th>Criterio</th>
+<th>Puntos</th>
+<th>Descripcion</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Estructura fit/transform correcta</td>
+<td>0.5</td>
+<td>La clase sigue el patron fit/transform sin data leakage.</td>
+</tr>
+<tr>
+<td>Mecanismo de filtrado alternativo</td>
+<td>0.5</td>
+<td>Se implementa al menos un metodo de filtrado diferente a los de
+BaseFiltering.</td>
+</tr>
+<tr>
+<td>Funcionalidad correcta</td>
+<td>0.5</td>
+<td>El filtrado reduce las features de forma efectiva y no genera
+errores en train/test.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="modelos-y-evaluacion-4.5-puntos">Modelos y evaluacion (4.5
+puntos)</h3>
+<table>
+<colgroup>
+<col style="width: 32%" />
+<col style="width: 25%" />
+<col style="width: 41%" />
+</colgroup>
+<thead>
+<tr>
+<th>Criterio</th>
+<th>Puntos</th>
+<th>Descripcion</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Ensemble de arboles</td>
+<td>0.75</td>
+<td>Se entrena correctamente un modelo de tipo ensemble de scikit-learn
+(GradientBoosting, RandomForest, AdaBoost, HistGradientBoosting).</td>
+</tr>
+<tr>
+<td>SVM con kernel</td>
+<td>0.75</td>
+<td>Se entrena correctamente un <code>sklearn.svm.SVC</code> con kernel
+(rbf, poly, etc.) y <code>probability=True</code>.</td>
+</tr>
+<tr>
+<td>Red neuronal</td>
+<td>0.75</td>
+<td>Se entrena correctamente un
+<code>sklearn.neural_network.MLPClassifier</code>.</td>
+</tr>
+<tr>
+<td>Metricas completas</td>
+<td>0.75</td>
+<td>Se calculan accuracy, precision, recall y PR-AUC para los 3 modelos
+en test.</td>
+</tr>
+<tr>
+<td>Tabla comparativa con modelo base</td>
+<td>0.5</td>
+<td>Se presenta una tabla resumen con las metricas de los 3 modelos
+<strong>y el modelo base</strong> (4 filas).</td>
+</tr>
+<tr>
+<td>Comparacion con modelo base</td>
+<td>0.5</td>
+<td>Se comenta en que metricas se supera al modelo base, por cuanto
+margen, y se reflexiona sobre posibles motivos si algun modelo no lo
+supera.</td>
+</tr>
+<tr>
+<td>Clase positiva correcta</td>
+<td>0.5</td>
+<td>La clase 1 (positiva) es el impago (Default = True = loan_status !=
+‘Fully Paid’).</td>
+</tr>
+</tbody>
+</table>
+<h3 id="calidad-del-notebook-y-entrega-1-punto">Calidad del notebook y
+entrega (1 punto)</h3>
+<table>
+<colgroup>
+<col style="width: 32%" />
+<col style="width: 25%" />
+<col style="width: 41%" />
+</colgroup>
+<thead>
+<tr>
+<th>Criterio</th>
+<th>Puntos</th>
+<th>Descripcion</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Comentarios y justificaciones</td>
+<td>0.25</td>
+<td>Se explican las decisiones tomadas (por que cada tecnica, por que
+cada parametro).</td>
+</tr>
+<tr>
+<td>Interpretacion de resultados</td>
+<td>0.25</td>
+<td>Se interpretan las metricas: que modelo funciona mejor, por que, que
+implican los resultados en contexto bancario.</td>
+</tr>
+<tr>
+<td>Repositorio Git y codigo ejecutable</td>
+<td>0.5</td>
+<td>Se entrega un repositorio Git accesible con README, el notebook se
+ejecuta sin errores y esta subido ya ejecutado con las salidas visibles.
+El codigo es legible y organizado.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="fecha-de-entrega">Fecha de entrega</h2>
+<p><strong>Por determinar.</strong></p>
+<hr />
+<h2 id="recursos-utiles">Recursos utiles</h2>
+<ul>
+<li>Documentacion de <a
+href="https://feature-engine.trainindata.com/">feature-engine</a> para
+seleccion y transformacion de features.</li>
+<li>Documentacion de <a
+href="https://scikit-learn.org/stable/">scikit-learn</a> para modelos,
+metricas y preprocesamiento.</li>
+<li>Notebook de referencia:
+<code>04_preprocessing_filtering_model.ipynb</code>.</li>
+<li>Clases de referencia:
+<code>src/preprocessing/base_preprocessing.py</code> y
+<code>src/filtering/base_filtering.py</code>.</li>
+</ul>
+</body>
+</html>
