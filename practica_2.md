@@ -10,14 +10,19 @@ En clase hemos seguido construyendo el pipeline end-to-end de Machine Learning p
 
 3. **Conformal Prediction** (`09_conformal_prediction.ipynb`): construccion de **intervalos de prediccion** con cobertura garantizada (Inductive Conformal Prediction, split-conformal). Permite cuantificar la **incertidumbre** de cada prediccion y derivar las decisiones inciertas a un humano (o a un agente especializado).
 
-**Punto de partida comun**: esta practica **debe partir de los pickles ya preprocesados y filtrados** que utiliza el notebook 11:
+**Punto de partida comun**: esta practica **debe partir de los artefactos de preprocesamiento y filtrado generados en clase**, sin volver a "fittear" preprocesador ni filtros (esa fase es la mas costosa computacionalmente y ya se hizo). Concretamente se reutiliza:
 
-- `data/filtered/X_train_filtered.pkl`
-- `data/filtered/y_train_filtered.pkl`
-- `data/filtered/X_test_filtered.pkl`
-- `data/filtered/y_test_filtered.pkl`
+- **Objetos proces** (objetos subidos en modulo `practica 2`):
+  - `base_pre.pkl` (objeto de preprocesamiento)
+  - `base_filter.pkl` (objeto de filtrado)
 
-Estos artefactos se generan al final del notebook `06_clean_preprocessing_and_filtering_model.ipynb` (que ya aplica el preprocesado sobre `data/variables_withExperts.xlsx` y el filtrado de features). **No se debe re-preprocesar ni re-filtrar**: se carga el pickle y se trabaja sobre el.
+- **Objetos fitteados** (necesarios sobre todo en el Repo 2, para procesar inputs crudos que llegan a la API, objetos subidos en modulo `practica 2`):
+  - `preprocessor.pkl`: el pipeline de **preprocesado ya fitteado** sobre train.
+  - `filter.pkl`: el pipeline de **filtrado de features ya fitteado** sobre train.
+
+> **Importante**: estos `.pkl` **no son datos**, son **objetos** (instancias de las clases de Practica 1) con sus parametros aprendidos y sus metodos incluidos (`transform`, etc.). Es decir, una vez cargados con `joblib.load(...)` se invocan directamente como `preprocessor.transform(df_raw)` o `feature_filter.transform(df_pre)` para procesar **datos nuevos** (por ejemplo, el payload que llegue a la API). Esto evita repetir el `fit` en cada arranque.
+
+Estos artefactos se generan al final del notebook `06_clean_preprocessing_and_filtering_model.ipynb` (que ya aplica el preprocesado sobre `data/variables_withExperts.xlsx` y el filtrado de features). **No se debe re-preprocesar ni re-filtrar en esta practica**: se cargan los pickles y se trabaja sobre ellos. También se adjuntan en el contenido extra de la práctica, dentro del módulo practica 2.
 
 ---
 
@@ -27,26 +32,24 @@ Construir, sobre el pipeline ya conocido, un **flujo completo de modelado y serv
 
 1. **Optimizacion automatica** de hiperparametros con Optuna usando una metrica que **mejore la calibracion sin degradar la discriminacion**.
 2. **Calibracion** de las probabilidades del mejor modelo, justificando si es necesario o no.
-3. **Cuantificacion de incertidumbre** mediante conformal prediction y politica de **derivacion a un agente** cuando la prediccion no es fiable.
+3. **Cuantificacion de incertidumbre** y politica de **derivacion a un agente** cuando la prediccion no es fiable.
 4. **API local** con dos servicios (subida de modelo + prediccion) lista para servir el modelo.
-5. **Aplicacion web local** que use el endpoint para estimar el riesgo de impago de un cliente nuevo, pidiendo solo las **5 variables mas relevantes** segun un Random Forest.
 
 ---
 
 ## Entrega
 
-La practica se entregara como **tres repositorios Git independientes** (GitHub, GitLab o similar). Se debe entregar **una URL por repositorio**. **No es necesario desplegar nada en la nube**: basta con que todo se pueda ejecutar en local siguiendo el `README` de cada repo.
+La practica se entregara como **dos repositorios Git independientes** (GitHub). Se debe entregar **una URL por repositorio**. **No es necesario desplegar nada en la nube**: basta con que todo se pueda ejecutar en local siguiendo el `README` de cada repo.
 
 | Repo | Contenido | Stack principal |
 |------|-----------|-----------------|
 | **Repo 1 - Modelado** | Notebook con Optuna, calibracion, medida de incertidumbre y persistencia del modelo final (`.pkl`) | Python + scikit-learn + Optuna |
 | **Repo 2 - API** | API REST que carga el `.pkl` y sirve predicciones con politica de derivacion | FastAPI + uvicorn |
-| **Repo 3 - Web** | Mini web que llama a la API, pide solo las 5 features mas relevantes y muestra la prediccion | HTML + JS plano (o equivalente sencillo) |
 
-**Requisitos comunes a los tres repos:**
+**Requisitos comunes a los dos repos:**
 - Accesibles por el profesor (publicos o con permisos de lectura).
 - `README` con instrucciones claras de instalacion y ejecucion en local.
-- Se entrega cada repo con su artefacto final: el `.pkl` del modelo (Repo 1), la API arrancable (Repo 2) y la web abrible en navegador (Repo 3).
+- Se entrega cada repo con su artefacto final: el `.pkl` del modelo (Repo 1) y la API arrancable (Repo 2).
 - En el Repo 1, los notebooks deben subirse **ya ejecutados** (con las celdas de salida visibles).
 
 ## Contenido de cada repositorio
@@ -59,12 +62,11 @@ Notebook que ejecute, de principio a fin, los pasos de modelado, calibracion e i
 
 El notebook 11 optimizaba **Brier score** (que penaliza calibracion + resolucion juntas) y los notebooks anteriores (07) miraban solo AUC. Aqui queremos optimizar una metrica que **mejore la calibracion sin degradar la discriminacion**.
 
-- **Cargar directamente** los pickles `data/filtered/{X_train_filtered, y_train_filtered, X_test_filtered, y_test_filtered}.pkl` (mismos artefactos que el notebook 11). No re-preprocesar ni re-filtrar.
-- Optimizar al menos **dos modelos** (de LightGBM, XGBoost, CatBoost o equivalente) con **Optuna + TPE** y aplicar las siguientes **variaciones** respecto al notebook 11:
+- **Cargar directamente** los pickles `preprocessor.pkl` y `filter.pkl` (mismos artefactos que el notebook 11). No re-preprocesar ni re-filtrar.
+- Optimizar  **dos modelos** (de LightGBM, XGBoost, CatBoost o equivalente) con **Optuna + TPE** y aplicar las siguientes **variaciones** respecto al notebook 11:
   - **Metrica objetivo**: usar una metrica que capture ambas dimensiones. Elegir **una** de las siguientes opciones (justificar la eleccion):
     1. **Log Loss** (`sklearn.metrics.log_loss`): proper scoring rule, descomponible en `resolution + reliability`. Penaliza tanto la mala discriminacion como la mala calibracion. Es la opcion mas sencilla y la recomendada por defecto.
-    2. **Optimizacion multi-objetivo** con Optuna (`directions=['minimize', 'maximize']`): minimizar `Brier` o `ECE` y maximizar `AUC` simultaneamente. Optuna devuelve el **frente de Pareto**. Hay que documentar como se elige el modelo final del frente (criterio explicito, ej. "menor Brier entre los modelos con AUC >= 0.97 * AUC_max").
-    3. **Metrica combinada** custom, ej. `AUC - lambda * ECE` o `MCC - lambda * Brier`, con `lambda` razonado.
+    2. **Metrica combinada** custom, ej. `AUC - lambda * ECE` o `MCC - lambda * Brier`, con `lambda` razonado.
   - **Sampler/pruner**: cambiar al menos uno de los siguientes parametros respecto al notebook 11. Por ejemplo: `HyperbandPruner` o `SuccessiveHalvingPruner` en lugar de `MedianPruner`, o cambiar `n_startup_trials` / `multivariate` del `TPESampler`. Justificar el cambio.
   - **Espacio de busqueda**: anadir o ampliar al menos un hiperparametro respecto al notebook 11 (ej. `min_child_weight` en XGBoost, `feature_fraction_bynode` en LightGBM, `border_count` en CatBoost).
   - **Comparacion balanceado vs no balanceado**: para cada modelo, lanzar el `study` **dos veces**:
@@ -78,7 +80,7 @@ El notebook 11 optimizaba **Brier score** (que penaliza calibracion + resolucion
 
 #### 1.2 Calibracion (variacion al notebook 10)
 
-- **Diagnostico previo**: para el modelo ganador, dibujar el `reliability diagram` y calcular `Brier`, `ECE` y `Log Loss` sobre test. Comentar si el modelo esta sobre-confiado, infra-confiado o ya razonablemente calibrado.
+
 - **Decision**: tomar de forma **explicita** la decision de calibrar o no, **justificada** con los numeros del diagnostico.
 - **Si se decide calibrar**: aplicar **un metodo fiable** (`sigmoid` / `isotonic` u otro justificado) y verificar que la calibracion mejora (`ECE`, `Brier`) **sin degradar** la discriminacion (`AUC`, `MCC`).
 - **Si se decide NO calibrar**: explicar por que el modelo no necesita calibracion, argumentado con datos.
@@ -111,17 +113,19 @@ Hasta aqui tenemos una **probabilidad puntual** `p` para cada cliente. Pero esa 
 #### 1.4 Persistencia del modelo
 
 Guardar como ultimo paso del notebook:
-- `models/practica2_model.pkl`: pipeline final (modelo + calibrador si lo hay + objeto de intervalo).
-- `models/feature_schema.json`: nombres y tipos de features que espera el modelo.
-- `models/top5_features.json`: las 5 features mas relevantes segun un Random Forest entrenado sobre el dataset filtrado (las que pedira la web).
-- `models/feature_defaults.json`: valor por defecto (mediana / moda en train) para el resto de features.
+- `practica2_model.pkl`: pipeline final (modelo + calibrador si lo hay + objeto de intervalo). Es **un objeto fitteado** con sus metodos (`predict`, `predict_proba`, y el metodo que devuelva el intervalo `[p_low, p_high]`), no datos.
 
-Estos cuatro ficheros son los que el Repo 2 (API) y el Repo 3 (Web) consumiran.
+
+El Repo 2 (API) consumira este ficheros junto con los `preprocessor.pkl` y `filter.pkl` heredados de Practica 1, encadenando: `df_raw -> preprocessor.transform -> filter.transform -> practica2_model.predict_proba`.
 
 
 ### Repo 2 - API local con FastAPI
 
-Repositorio independiente con una API REST en **FastAPI**, ejecutable en local con `uv` y `uvicorn`. **No depende del codigo del Repo 1**: solo consume el `.pkl` y los `.json` que produce el notebook.
+Repositorio independiente con una API REST en **FastAPI**, ejecutable en local con `uv` y `uvicorn`. **No depende del codigo del Repo 1**: solo consume los `.pkl` y los `.json`. Concretamente carga **tres objetos fitteados** y los encadena en cada prediccion:
+
+1. `preprocessor.pkl` (heredado de Practica 1) -> `preprocessor.transform(df_raw)`.
+2. `filter.pkl` (heredado de Practica 1) -> `filter.transform(df_pre)`.
+3. `practica2_model.pkl` (generado en el Repo 1) -> `model.predict_proba(...)` y metodo de intervalo.
 
 **Dos endpoints:**
 
@@ -131,7 +135,8 @@ Repositorio independiente con una API REST en **FastAPI**, ejecutable en local c
    - Devuelve la version y un timestamp.
 
 2. **`POST /predict`**: devuelve la **probabilidad de impago con intervalo de incertidumbre** y la decision.
-   - Recibe un JSON con las features del cliente.
+   - Recibe un JSON con las features **crudas** del cliente (las mismas columnas que `data/variables_withExperts.xlsx`, sin preprocesar).
+   - Internamente aplica `preprocessor.transform` -> `filter.transform` -> `model.predict_proba` + metodo de intervalo.
    - Devuelve:
      ```json
      {
@@ -150,37 +155,8 @@ Repositorio independiente con una API REST en **FastAPI**, ejecutable en local c
   uv run uvicorn api.main:app --reload --port 8080
   ```
 - `README` con ese comando + ejemplos de invocacion con `curl` para los dos endpoints + ejemplo de payload.
-- Habilitar **CORS** para que la web del Repo 3 pueda llamar al endpoint desde el navegador.
 - Aprovechar la doc automatica de FastAPI en `http://localhost:8080/docs` (Swagger UI) como evidencia de que la API funciona.
 - `Dockerfile` **opcional** (suma puntos pero no es obligatorio).
-
-### Repo 3 - Web (proyecto nuevo, generada con ayuda de IA)
-
-Repositorio independiente con una **mini web sencilla**, **sin frameworks sofisticados** (nada de React, Vue, Angular o similares):
-
-- **HTML + CSS + JavaScript planos** (un `index.html`, un `styles.css` opcional, un `app.js`), abrible directamente con `open index.html` o servido con `python -m http.server`.
-- O equivalentemente: una sola pagina HTML servida desde un mini-servidor estatico.
-
-La web debe haber sido **generada con ayuda de un asistente de IA** (Claude, ChatGPT, Cursor, etc.). En el `README`:
-- Indicar **que herramienta de IA** se uso.
-- Pegar (al menos) el **prompt principal** con el que se genero la web.
-
-**Funcionalidad:**
-
-- Formulario con **solo 5 campos**: las **5 features mas relevantes** segun la importancia de un `RandomForestClassifier` (calculadas en el Repo 1 y persistidas en `top5_features.json`). El resto de features se rellenan en cliente con `feature_defaults.json` antes de enviar a la API.
-- Boton **"Predecir"** que hace `fetch` a `POST {API_URL}/predict`.
-- Muestra:
-  - **"Va a pagar"** / **"No va a pagar"** segun la prediccion (umbral `p_default >= 0.5`).
-  - El **riesgo** (probabilidad de impago) en porcentaje y con una **barra visual** (`<progress>` o div con anchura proporcional).
-  - Si `decision = "agent"`, en lugar del resultado automatico, mostrar un aviso del tipo **"Caso incierto, derivado a un analista humano"**, indicando la anchura del intervalo `[p_low, p_high]`.
-
-**Requisitos tecnicos:**
-- HTML/CSS/JS sin bundlers ni frameworks SPA.
-- La URL de la API se configura desde un fichero `config.js` (o equivalente) con `const API_URL = "http://localhost:8080";`. No hardcodear dentro del codigo de la logica.
-- `README` con:
-  - Como abrir la web en local (`open index.html` o `python -m http.server 5500`).
-  - La herramienta y prompt de IA usados.
-  - Capturas de pantalla del resultado en los dos casos (`auto` y `agent`).
 
 ---
 
@@ -188,69 +164,54 @@ La web debe haber sido **generada con ayuda de un asistente de IA** (Claude, Cha
 
 - Repo 1 y Repo 2 usan **`uv`** como gestor de entorno y dependencias (igual que el repo de clase). Las dependencias nuevas (`optuna`, `fastapi`, `uvicorn`, `python-multipart` para el upload, etc.) se anaden con `uv add <paquete>` y quedan reflejadas en `pyproject.toml` / `uv.lock`.
 - **Log Loss** esta disponible como `sklearn.metrics.log_loss`. **MCC** como `sklearn.metrics.matthews_corrcoef`. **ECE** se calcula a partir del reliability diagram (binning).
-- Si se usa **optimizacion multi-objetivo** con Optuna:
-  ```python
-  study = optuna.create_study(directions=['minimize', 'maximize'])
-  # objective devuelve (brier_val, auc_val)
-  ```
-  La eleccion del modelo final se hace sobre `study.best_trials` (frente de Pareto) con un criterio explicito.
+
 - En la API, **no exponer datos sensibles** (no loguear el payload completo en produccion). En local pueden loguearse para debug.
-- **CORS** en la API (Repo 2): habilitar `fastapi.middleware.cors.CORSMiddleware` con `allow_origins=["*"]` en local para permitir las llamadas desde la web del Repo 3.
 
 ---
 
 ## Rubrica de puntuacion (sobre 10)
 
-### Repo 1 - Optimizacion con Optuna (2 puntos)
+### Repo 1 - Optimizacion con Optuna (2.5 puntos)
 
 | Criterio | Puntos | Descripcion |
 |----------|--------|-------------|
-| Metrica que combina calibracion y discriminacion | 0.5 | Se optimiza Log Loss, multi-objetivo o metrica combinada justificada (no solo Brier ni solo AUC). |
+| Metrica que combina calibracion y discriminacion | 0.75 | Se optimiza Log Loss, multi-objetivo o metrica combinada justificada (no solo Brier ni solo AUC). |
 | Variacion respecto al notebook 11 | 0.5 | Al menos un cambio justificado en sampler, pruner o espacio de busqueda. |
 | Comparacion balanceado vs no balanceado | 0.5 | Cada modelo se entrena en las dos modalidades y se comparan resultados. |
-| Tabla final y eleccion del ganador | 0.5 | Tabla con metricas (Accuracy, Precision, Recall, F1, MCC, AUC, PR-AUC, Log Loss, Brier, ECE) y eleccion justificada del modelo. |
+| Tabla final y eleccion del ganador | 0.75 | Tabla con metricas (Accuracy, Precision, Recall, F1, MCC, AUC, PR-AUC, Log Loss, Brier, ECE) y eleccion justificada del modelo. |
 
-### Repo 1 - Calibracion (1 punto)
+### Repo 1 - Calibracion (1.5 puntos)
 
 | Criterio | Puntos | Descripcion |
 |----------|--------|-------------|
-| Diagnostico (reliability diagram + ECE + Brier + Log Loss) | 0.25 | Se diagnostica la calibracion del modelo ganador con metricas y grafico. |
-| Decision argumentada (calibrar o no) | 0.25 | Se decide calibrar o no con justificacion numerica, no por defecto. |
+| Diagnostico (reliability diagram + ECE + Brier + Log Loss) | 0.5 | Se diagnostica la calibracion del modelo ganador con metricas y grafico. |
+| Decision argumentada (calibrar o no) | 0.5 | Se decide calibrar o no con justificacion numerica, no por defecto. |
 | Aplicacion correcta (si calibra) o argumentacion (si no) | 0.5 | Si calibra, aplica un metodo fiable y verifica que no degrada AUC/MCC. Si no, justifica solidamente. |
 
-### Repo 1 - Incertidumbre y derivacion a un agente (2 puntos)
+### Repo 1 - Incertidumbre y derivacion a un agente (2.5 puntos)
 
 | Criterio | Puntos | Descripcion |
 |----------|--------|-------------|
-| Identificacion del metodo necesario | 0.5 | Se responde la pregunta abierta y se justifica el metodo elegido para obtener un intervalo de probabilidad por prediccion. |
+| Identificacion del metodo necesario | 0.75 | Se responde la pregunta abierta y se justifica el metodo elegido para obtener un intervalo de probabilidad por prediccion. |
 | Implementacion del intervalo `[p_low, p_high]` | 0.5 | Se aplica el metodo elegido y se reporta la distribucion de la anchura sobre test. |
-| Politica de derivacion (anchura > 0.2) | 0.5 | Regla implementada; se reporta `%` derivado + metricas restringidas a casos auto vs metricas globales. |
-| Persistencia del artefacto | 0.5 | El notebook guarda `practica2_model.pkl`, `feature_schema.json`, `top5_features.json` y `feature_defaults.json`. |
+| Politica de derivacion (anchura > 0.2) | 0.75 | Regla implementada; se reporta `%` derivado + metricas restringidas a casos auto vs metricas globales. |
+| Persistencia del artefacto | 0.5 | El notebook guarda `practica2_model.pkl` y `feature_schema.json`. |
 
-### Repo 2 - API con FastAPI (2 puntos)
-
-| Criterio | Puntos | Descripcion |
-|----------|--------|-------------|
-| Endpoint `/model/upload` | 0.5 | Sube y carga un nuevo `.pkl`, lo valida y lo deja activo. |
-| Endpoint `/predict` con intervalo | 1.0 | Devuelve `p_default`, `p_low`, `p_high` y `decision` segun la regla `p_high - p_low > 0.2`. |
-| Ejecucion local + CORS + Swagger | 0.5 | `uv run uvicorn ...` arranca, CORS habilitado, `/docs` accesible, `README` con `curl` de ejemplo. |
-
-### Repo 3 - Web sencilla generada con IA (2 puntos)
+### Repo 2 - API con FastAPI (2.5 puntos)
 
 | Criterio | Puntos | Descripcion |
 |----------|--------|-------------|
-| Stack sencillo (HTML/CSS/JS planos, sin React/Vue/Angular) | 0.5 | Web abrible directamente, sin bundlers. |
-| Uso documentado de IA para generar la web | 0.5 | `README` indica herramienta y prompt principal. |
-| Top-5 features + defaults + llamada a API | 0.5 | Pide solo 5 inputs, completa el payload con los defaults y llama a `POST /predict`. |
-| UI con riesgo, barra y aviso de derivacion | 0.5 | Muestra prediccion + probabilidad + barra; en caso `agent` muestra aviso en lugar del resultado automatico. |
+| Endpoint `/model/upload` | 0.75 | Sube y carga un nuevo `.pkl`, lo valida y lo deja activo. |
+| Endpoint `/predict` con intervalo | 1.25 | Devuelve `p_default`, `p_low`, `p_high` y `decision` segun la regla `p_high - p_low > 0.2`. |
+| Ejecucion local + Swagger | 0.5 | `uv run uvicorn ...` arranca, `/docs` accesible, `README` con `curl` de ejemplo. |
 
 ### Calidad y entrega (1 punto)
 
 | Criterio | Puntos | Descripcion |
 |----------|--------|-------------|
-| Tres URLs entregadas y accesibles | 0.25 | Repo 1, Repo 2 y Repo 3 entregados como repositorios independientes. |
-| README en cada repo | 0.5 | Cada repo tiene `README` propio con instrucciones de ejecucion en local y, en Repo 3, capturas + prompt de IA. |
-| Reproducibilidad | 0.25 | `random_state` fijado, dependencias congeladas (`uv.lock`), instrucciones claras para reproducir Repo 1 + Repo 2 + Repo 3. |
+| Dos URLs entregadas y accesibles | 0.25 | Repo 1 y Repo 2 entregados como repositorios independientes. |
+| README en cada repo | 0.5 | Cada repo tiene `README` propio con instrucciones de ejecucion en local. |
+| Reproducibilidad | 0.25 | `random_state` fijado, dependencias congeladas (`uv.lock`), instrucciones claras para reproducir Repo 1 + Repo 2. |
 
 ---
 

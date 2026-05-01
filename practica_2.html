@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Practica 2</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      white-space: pre-wrap;
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">Practica 2</h1>
+</header>
+<h1
+id="practica-2-optimizacion-conjunta-calibracion-discriminacion-incertidumbre-y-servicio-del-modelo">Practica
+2: Optimizacion conjunta calibracion-discriminacion, incertidumbre y
+servicio del modelo</h1>
+<h2 id="contexto">Contexto</h2>
+<p>En clase hemos seguido construyendo el pipeline end-to-end de Machine
+Learning para deteccion de impago. Sobre la base de Practica 1
+(preprocesamiento + filtrado + modelos), hemos visto en los siguientes
+notebooks de referencia:</p>
+<ol type="1">
+<li><p><strong>Optimizacion bayesiana de hiperparametros</strong>
+(<code>11_optuna_tpe.ipynb</code>): uso de <strong>Optuna</strong> con
+sampler <strong>TPE</strong> y <code>MedianPruner</code> para tunear
+LightGBM, XGBoost y CatBoost minimizando <strong>Brier score</strong>
+sobre un split interno train/val. Incluye early stopping con metrica
+custom y comparacion contra los baselines del notebook 07.</p></li>
+<li><p><strong>Calibracion de probabilidades</strong>
+(<code>10_calibracion.ipynb</code>): diagnostico con
+<code>reliability diagram</code>, <code>Brier score</code> y
+<code>Expected Calibration Error (ECE)</code>, y aplicacion de
+<strong>Platt scaling</strong> (sigmoid) e <strong>isotonic
+regression</strong> mediante
+<code>sklearn.calibration.CalibratedClassifierCV</code>. Reflexion sobre
+<strong>cuando calibrar</strong> y <strong>cuando no merece la
+pena</strong> (modelos ya calibrados, datasets pequenos, etc.).</p></li>
+<li><p><strong>Conformal Prediction</strong>
+(<code>09_conformal_prediction.ipynb</code>): construccion de
+<strong>intervalos de prediccion</strong> con cobertura garantizada
+(Inductive Conformal Prediction, split-conformal). Permite cuantificar
+la <strong>incertidumbre</strong> de cada prediccion y derivar las
+decisiones inciertas a un humano (o a un agente especializado).</p></li>
+</ol>
+<p><strong>Punto de partida comun</strong>: esta practica <strong>debe
+partir de los artefactos de preprocesamiento y filtrado generados en
+clase</strong>, sin volver a “fittear” preprocesador ni filtros (esa
+fase es la mas costosa computacionalmente y ya se hizo). Concretamente
+se reutiliza:</p>
+<ul>
+<li><strong>Objetos proces</strong> (objetos subidos en modulo
+<code>practica 2</code>):
+<ul>
+<li><code>base_pre.pkl</code> (objeto de preprocesamiento)</li>
+<li><code>base_filter.pkl</code> (objeto de filtrado)</li>
+</ul></li>
+<li><strong>Objetos fitteados</strong> (necesarios sobre todo en el Repo
+2, para procesar inputs crudos que llegan a la API, objetos subidos en
+modulo <code>practica 2</code>):
+<ul>
+<li><code>preprocessor.pkl</code>: el pipeline de <strong>preprocesado
+ya fitteado</strong> sobre train.</li>
+<li><code>filter.pkl</code>: el pipeline de <strong>filtrado de features
+ya fitteado</strong> sobre train.</li>
+</ul></li>
+</ul>
+<blockquote>
+<p><strong>Importante</strong>: estos <code>.pkl</code> <strong>no son
+datos</strong>, son <strong>objetos</strong> (instancias de las clases
+de Practica 1) con sus parametros aprendidos y sus metodos incluidos
+(<code>transform</code>, etc.). Es decir, una vez cargados con
+<code>joblib.load(...)</code> se invocan directamente como
+<code>preprocessor.transform(df_raw)</code> o
+<code>feature_filter.transform(df_pre)</code> para procesar
+<strong>datos nuevos</strong> (por ejemplo, el payload que llegue a la
+API). Esto evita repetir el <code>fit</code> en cada arranque.</p>
+</blockquote>
+<p>Estos artefactos se generan al final del notebook
+<code>06_clean_preprocessing_and_filtering_model.ipynb</code> (que ya
+aplica el preprocesado sobre
+<code>data/variables_withExperts.xlsx</code> y el filtrado de features).
+<strong>No se debe re-preprocesar ni re-filtrar en esta
+practica</strong>: se cargan los pickles y se trabaja sobre ellos.
+También se adjuntan en el contenido extra de la práctica, dentro del
+módulo practica 2.</p>
+<hr />
+<h2 id="objetivo-de-la-practica">Objetivo de la practica</h2>
+<p>Construir, sobre el pipeline ya conocido, un <strong>flujo completo
+de modelado y servicio</strong> que incluya:</p>
+<ol type="1">
+<li><strong>Optimizacion automatica</strong> de hiperparametros con
+Optuna usando una metrica que <strong>mejore la calibracion sin degradar
+la discriminacion</strong>.</li>
+<li><strong>Calibracion</strong> de las probabilidades del mejor modelo,
+justificando si es necesario o no.</li>
+<li><strong>Cuantificacion de incertidumbre</strong> y politica de
+<strong>derivacion a un agente</strong> cuando la prediccion no es
+fiable.</li>
+<li><strong>API local</strong> con dos servicios (subida de modelo +
+prediccion) lista para servir el modelo.</li>
+</ol>
+<hr />
+<h2 id="entrega">Entrega</h2>
+<p>La practica se entregara como <strong>dos repositorios Git
+independientes</strong> (GitHub). Se debe entregar <strong>una URL por
+repositorio</strong>. <strong>No es necesario desplegar nada en la
+nube</strong>: basta con que todo se pueda ejecutar en local siguiendo
+el <code>README</code> de cada repo.</p>
+<table>
+<colgroup>
+<col style="width: 17%" />
+<col style="width: 32%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Repo</th>
+<th>Contenido</th>
+<th>Stack principal</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Repo 1 - Modelado</strong></td>
+<td>Notebook con Optuna, calibracion, medida de incertidumbre y
+persistencia del modelo final (<code>.pkl</code>)</td>
+<td>Python + scikit-learn + Optuna</td>
+</tr>
+<tr>
+<td><strong>Repo 2 - API</strong></td>
+<td>API REST que carga el <code>.pkl</code> y sirve predicciones con
+politica de derivacion</td>
+<td>FastAPI + uvicorn</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Requisitos comunes a los dos repos:</strong> - Accesibles por
+el profesor (publicos o con permisos de lectura). - <code>README</code>
+con instrucciones claras de instalacion y ejecucion en local. - Se
+entrega cada repo con su artefacto final: el <code>.pkl</code> del
+modelo (Repo 1) y la API arrancable (Repo 2). - En el Repo 1, los
+notebooks deben subirse <strong>ya ejecutados</strong> (con las celdas
+de salida visibles).</p>
+<h2 id="contenido-de-cada-repositorio">Contenido de cada
+repositorio</h2>
+<h3 id="repo-1---modelado-notebook-practica2_notebook.ipynb">Repo 1 -
+Modelado: notebook <code>practica2_notebook.ipynb</code></h3>
+<p>Notebook que ejecute, de principio a fin, los pasos de modelado,
+calibracion e incertidumbre, y guarde al final el artefacto del modelo
+que consumira la API. Estructura sugerida:</p>
+<h4
+id="optimizacion-con-optuna-calibracion-y-discriminacion-variacion-al-notebook-11">1.1
+Optimizacion con Optuna: calibracion <strong>y</strong> discriminacion
+(variacion al notebook 11)</h4>
+<p>El notebook 11 optimizaba <strong>Brier score</strong> (que penaliza
+calibracion + resolucion juntas) y los notebooks anteriores (07) miraban
+solo AUC. Aqui queremos optimizar una metrica que <strong>mejore la
+calibracion sin degradar la discriminacion</strong>.</p>
+<ul>
+<li><strong>Cargar directamente</strong> los pickles
+<code>preprocessor.pkl</code> y <code>filter.pkl</code> (mismos
+artefactos que el notebook 11). No re-preprocesar ni re-filtrar.</li>
+<li>Optimizar <strong>dos modelos</strong> (de LightGBM, XGBoost,
+CatBoost o equivalente) con <strong>Optuna + TPE</strong> y aplicar las
+siguientes <strong>variaciones</strong> respecto al notebook 11:
+<ul>
+<li><strong>Metrica objetivo</strong>: usar una metrica que capture
+ambas dimensiones. Elegir <strong>una</strong> de las siguientes
+opciones (justificar la eleccion):
+<ol type="1">
+<li><strong>Log Loss</strong> (<code>sklearn.metrics.log_loss</code>):
+proper scoring rule, descomponible en
+<code>resolution + reliability</code>. Penaliza tanto la mala
+discriminacion como la mala calibracion. Es la opcion mas sencilla y la
+recomendada por defecto.</li>
+<li><strong>Metrica combinada</strong> custom, ej.
+<code>AUC - lambda * ECE</code> o <code>MCC - lambda * Brier</code>, con
+<code>lambda</code> razonado.</li>
+</ol></li>
+<li><strong>Sampler/pruner</strong>: cambiar al menos uno de los
+siguientes parametros respecto al notebook 11. Por ejemplo:
+<code>HyperbandPruner</code> o <code>SuccessiveHalvingPruner</code> en
+lugar de <code>MedianPruner</code>, o cambiar
+<code>n_startup_trials</code> / <code>multivariate</code> del
+<code>TPESampler</code>. Justificar el cambio.</li>
+<li><strong>Espacio de busqueda</strong>: anadir o ampliar al menos un
+hiperparametro respecto al notebook 11 (ej.
+<code>min_child_weight</code> en XGBoost,
+<code>feature_fraction_bynode</code> en LightGBM,
+<code>border_count</code> en CatBoost).</li>
+<li><strong>Comparacion balanceado vs no balanceado</strong>: para cada
+modelo, lanzar el <code>study</code> <strong>dos veces</strong>:
+<ol type="1">
+<li>Con tratamiento de desbalanceo
+(<code>class_weight='balanced'</code>,
+<code>scale_pos_weight=neg/pos</code> o
+<code>auto_class_weights='Balanced'</code>).</li>
+<li><strong>Sin</strong> tratamiento de desbalanceo.</li>
+</ol>
+Comparar el <code>best_value</code> (la metrica elegida) y, sobre todo,
+las metricas finales en test. Comentar que opcion gana en calibracion
+(Brier/ECE) y que ocurre con discriminacion (AUC/MCC).
+<strong>Importante</strong>: el balanceo de clases sesga las
+probabilidades; comentar el efecto sobre la calibracion.</li>
+</ul></li>
+<li>Para cada modelo final, calcular en test y mostrar en una tabla:
+<strong>Accuracy, Precision, Recall, F1, MCC, ROC-AUC, PR-AUC, Log Loss,
+Brier, ECE</strong>.</li>
+<li>Eleccion del <strong>modelo ganador</strong> que pasa a la siguiente
+fase, justificada por la metrica elegida.</li>
+</ul>
+<h4 id="calibracion-variacion-al-notebook-10">1.2 Calibracion (variacion
+al notebook 10)</h4>
+<ul>
+<li><strong>Decision</strong>: tomar de forma <strong>explicita</strong>
+la decision de calibrar o no, <strong>justificada</strong> con los
+numeros del diagnostico.</li>
+<li><strong>Si se decide calibrar</strong>: aplicar <strong>un metodo
+fiable</strong> (<code>sigmoid</code> / <code>isotonic</code> u otro
+justificado) y verificar que la calibracion mejora (<code>ECE</code>,
+<code>Brier</code>) <strong>sin degradar</strong> la discriminacion
+(<code>AUC</code>, <code>MCC</code>).</li>
+<li><strong>Si se decide NO calibrar</strong>: explicar por que el
+modelo no necesita calibracion, argumentado con datos.</li>
+</ul>
+<h4 id="medida-de-incertidumbre-y-derivacion-a-un-agente">1.3 Medida de
+incertidumbre y derivacion a un agente</h4>
+<p>Hasta aqui tenemos una <strong>probabilidad puntual</strong>
+<code>p</code> para cada cliente. Pero esa probabilidad puede ser, ella
+misma, <strong>incierta</strong>: dos clientes pueden tener
+<code>p = 0.55</code> y, sin embargo, en uno el modelo esta
+razonablemente seguro de que la probabilidad real esta cerca de 0.55 y
+en el otro no tiene ni idea (podria estar en cualquier sitio entre 0.4 y
+0.7). Queremos detectar este segundo caso y <strong>derivar a un agente
+humano</strong>.</p>
+<ul>
+<li><p><strong>Pregunta abierta a responder en el notebook</strong>:
+&gt; <em>“Tengo una probabilidad puntual de mi modelo. ¿Que necesito
+para medir la incertidumbre de esa probabilidad y poder derivar a un
+agente cuando esa incertidumbre sea alta? ¿Me sirve la calibracion
+clasica (sigmoid/isotonic)? ¿Que estoy obteniendo realmente con cada
+metodo?”</em></p>
+<p>Argumentar la respuesta y elegir un metodo que permita obtener, para
+cada prediccion, un <strong>intervalo de probabilidad</strong>
+<code>[p_low, p_high]</code> (la anchura de ese intervalo sera la medida
+de incertidumbre). Justificar la eleccion del metodo.</p></li>
+<li><p><strong>Implementacion</strong>:</p>
+<ul>
+<li>Aplicar el metodo elegido al modelo final. Para cada sample de test
+obtener <code>p_low</code> y <code>p_high</code>.</li>
+<li>Reportar la <strong>distribucion de la anchura</strong>
+<code>p_high - p_low</code> sobre test (histograma, percentiles).</li>
+</ul></li>
+<li><p><strong>Politica de derivacion</strong>: &gt; Si
+<code>|p_high - p_low| &gt; 0.2</code> -&gt;
+<code>decision = "agent"</code>. En caso contrario -&gt;
+<code>decision = "auto"</code>.</p>
+<p>Es decir, solo dejamos que el modelo decida cuando el intervalo de
+probabilidad es <strong>estrecho</strong> (modelo seguro de su propia
+probabilidad).</p></li>
+<li><p><strong>Reflexion adicional</strong>: bajo esta politica, ¿hace
+falta calibrar puntualmente con sigmoid/isotonic, o el propio metodo de
+intervalo elegido ya garantiza calibracion sobre los casos que se quedan
+en <code>auto</code>? Razonar.</p></li>
+<li><p><strong>Metricas con derivacion</strong> sobre test:</p>
+<ul>
+<li><code>% de casos derivados al agente</code>.</li>
+<li>Accuracy / Precision / Recall <strong>solo sobre los casos
+auto-decididos</strong>.</li>
+<li>Comparar con las metricas globales del paso 1.1 para mostrar el
+trade-off cobertura/precision.</li>
+</ul></li>
+</ul>
+<h4 id="persistencia-del-modelo">1.4 Persistencia del modelo</h4>
+<p>Guardar como ultimo paso del notebook: -
+<code>practica2_model.pkl</code>: pipeline final (modelo + calibrador si
+lo hay + objeto de intervalo). Es <strong>un objeto fitteado</strong>
+con sus metodos (<code>predict</code>, <code>predict_proba</code>, y el
+metodo que devuelva el intervalo <code>[p_low, p_high]</code>), no
+datos.</p>
+<p>El Repo 2 (API) consumira este ficheros junto con los
+<code>preprocessor.pkl</code> y <code>filter.pkl</code> heredados de
+Practica 1, encadenando:
+<code>df_raw -&gt; preprocessor.transform -&gt; filter.transform -&gt; practica2_model.predict_proba</code>.</p>
+<h3 id="repo-2---api-local-con-fastapi">Repo 2 - API local con
+FastAPI</h3>
+<p>Repositorio independiente con una API REST en
+<strong>FastAPI</strong>, ejecutable en local con <code>uv</code> y
+<code>uvicorn</code>. <strong>No depende del codigo del Repo 1</strong>:
+solo consume los <code>.pkl</code> y los <code>.json</code>.
+Concretamente carga <strong>tres objetos fitteados</strong> y los
+encadena en cada prediccion:</p>
+<ol type="1">
+<li><code>preprocessor.pkl</code> (heredado de Practica 1) -&gt;
+<code>preprocessor.transform(df_raw)</code>.</li>
+<li><code>filter.pkl</code> (heredado de Practica 1) -&gt;
+<code>filter.transform(df_pre)</code>.</li>
+<li><code>practica2_model.pkl</code> (generado en el Repo 1) -&gt;
+<code>model.predict_proba(...)</code> y metodo de intervalo.</li>
+</ol>
+<p><strong>Dos endpoints:</strong></p>
+<ol type="1">
+<li><strong><code>POST /model/upload</code></strong>: sube un nuevo
+artefacto del modelo al servicio.
+<ul>
+<li>Acepta el <code>.pkl</code> como <code>multipart/form-data</code> (o
+una ruta local).</li>
+<li>Lo carga, valida que tiene los metodos esperados y lo deja activo en
+memoria.</li>
+<li>Devuelve la version y un timestamp.</li>
+</ul></li>
+<li><strong><code>POST /predict</code></strong>: devuelve la
+<strong>probabilidad de impago con intervalo de incertidumbre</strong> y
+la decision.
+<ul>
+<li><p>Recibe un JSON con las features <strong>crudas</strong> del
+cliente (las mismas columnas que
+<code>data/variables_withExperts.xlsx</code>, sin preprocesar).</p></li>
+<li><p>Internamente aplica <code>preprocessor.transform</code> -&gt;
+<code>filter.transform</code> -&gt; <code>model.predict_proba</code> +
+metodo de intervalo.</p></li>
+<li><p>Devuelve:</p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;p_default&quot;</span><span class="fu">:</span> <span class="fl">0.31</span><span class="fu">,</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;p_low&quot;</span><span class="fu">:</span> <span class="fl">0.22</span><span class="fu">,</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;p_high&quot;</span><span class="fu">:</span> <span class="fl">0.41</span><span class="fu">,</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;decision&quot;</span><span class="fu">:</span> <span class="st">&quot;auto&quot;</span> <span class="er">|</span> <span class="st">&quot;agent&quot;</span><span class="fu">,</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;reason&quot;</span><span class="fu">:</span> <span class="st">&quot;p_high - p_low &gt; 0.2&quot;</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div></li>
+<li><p>Regla: <code>decision = "agent"</code> si
+<code>p_high - p_low &gt; 0.2</code>. En caso contrario,
+<code>decision = "auto"</code>.</p></li>
+</ul></li>
+</ol>
+<p><strong>Requisitos tecnicos:</strong> - Stack fijo: <strong>FastAPI +
+uvicorn</strong>, gestionado con <code>uv</code>. Se arranca en local
+con:
+<code>bash   uv run uvicorn api.main:app --reload --port 8080</code> -
+<code>README</code> con ese comando + ejemplos de invocacion con
+<code>curl</code> para los dos endpoints + ejemplo de payload. -
+Aprovechar la doc automatica de FastAPI en
+<code>http://localhost:8080/docs</code> (Swagger UI) como evidencia de
+que la API funciona. - <code>Dockerfile</code> <strong>opcional</strong>
+(suma puntos pero no es obligatorio).</p>
+<hr />
+<h2 id="notas-tecnicas">Notas tecnicas</h2>
+<ul>
+<li><p>Repo 1 y Repo 2 usan <strong><code>uv</code></strong> como gestor
+de entorno y dependencias (igual que el repo de clase). Las dependencias
+nuevas (<code>optuna</code>, <code>fastapi</code>, <code>uvicorn</code>,
+<code>python-multipart</code> para el upload, etc.) se anaden con
+<code>uv add &lt;paquete&gt;</code> y quedan reflejadas en
+<code>pyproject.toml</code> / <code>uv.lock</code>.</p></li>
+<li><p><strong>Log Loss</strong> esta disponible como
+<code>sklearn.metrics.log_loss</code>. <strong>MCC</strong> como
+<code>sklearn.metrics.matthews_corrcoef</code>. <strong>ECE</strong> se
+calcula a partir del reliability diagram (binning).</p></li>
+<li><p>En la API, <strong>no exponer datos sensibles</strong> (no
+loguear el payload completo en produccion). En local pueden loguearse
+para debug.</p></li>
+</ul>
+<hr />
+<h2 id="rubrica-de-puntuacion-sobre-10">Rubrica de puntuacion (sobre
+10)</h2>
+<h3 id="repo-1---optimizacion-con-optuna-2.5-puntos">Repo 1 -
+Optimizacion con Optuna (2.5 puntos)</h3>
+<table>
+<colgroup>
+<col style="width: 32%" />
+<col style="width: 25%" />
+<col style="width: 41%" />
+</colgroup>
+<thead>
+<tr>
+<th>Criterio</th>
+<th>Puntos</th>
+<th>Descripcion</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Metrica que combina calibracion y discriminacion</td>
+<td>0.75</td>
+<td>Se optimiza Log Loss, multi-objetivo o metrica combinada justificada
+(no solo Brier ni solo AUC).</td>
+</tr>
+<tr>
+<td>Variacion respecto al notebook 11</td>
+<td>0.5</td>
+<td>Al menos un cambio justificado en sampler, pruner o espacio de
+busqueda.</td>
+</tr>
+<tr>
+<td>Comparacion balanceado vs no balanceado</td>
+<td>0.5</td>
+<td>Cada modelo se entrena en las dos modalidades y se comparan
+resultados.</td>
+</tr>
+<tr>
+<td>Tabla final y eleccion del ganador</td>
+<td>0.75</td>
+<td>Tabla con metricas (Accuracy, Precision, Recall, F1, MCC, AUC,
+PR-AUC, Log Loss, Brier, ECE) y eleccion justificada del modelo.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="repo-1---calibracion-1.5-puntos">Repo 1 - Calibracion (1.5
+puntos)</h3>
+<table>
+<colgroup>
+<col style="width: 32%" />
+<col style="width: 25%" />
+<col style="width: 41%" />
+</colgroup>
+<thead>
+<tr>
+<th>Criterio</th>
+<th>Puntos</th>
+<th>Descripcion</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Diagnostico (reliability diagram + ECE + Brier + Log Loss)</td>
+<td>0.5</td>
+<td>Se diagnostica la calibracion del modelo ganador con metricas y
+grafico.</td>
+</tr>
+<tr>
+<td>Decision argumentada (calibrar o no)</td>
+<td>0.5</td>
+<td>Se decide calibrar o no con justificacion numerica, no por
+defecto.</td>
+</tr>
+<tr>
+<td>Aplicacion correcta (si calibra) o argumentacion (si no)</td>
+<td>0.5</td>
+<td>Si calibra, aplica un metodo fiable y verifica que no degrada
+AUC/MCC. Si no, justifica solidamente.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="repo-1---incertidumbre-y-derivacion-a-un-agente-2.5-puntos">Repo
+1 - Incertidumbre y derivacion a un agente (2.5 puntos)</h3>
+<table>
+<colgroup>
+<col style="width: 32%" />
+<col style="width: 25%" />
+<col style="width: 41%" />
+</colgroup>
+<thead>
+<tr>
+<th>Criterio</th>
+<th>Puntos</th>
+<th>Descripcion</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Identificacion del metodo necesario</td>
+<td>0.75</td>
+<td>Se responde la pregunta abierta y se justifica el metodo elegido
+para obtener un intervalo de probabilidad por prediccion.</td>
+</tr>
+<tr>
+<td>Implementacion del intervalo <code>[p_low, p_high]</code></td>
+<td>0.5</td>
+<td>Se aplica el metodo elegido y se reporta la distribucion de la
+anchura sobre test.</td>
+</tr>
+<tr>
+<td>Politica de derivacion (anchura &gt; 0.2)</td>
+<td>0.75</td>
+<td>Regla implementada; se reporta <code>%</code> derivado + metricas
+restringidas a casos auto vs metricas globales.</td>
+</tr>
+<tr>
+<td>Persistencia del artefacto</td>
+<td>0.5</td>
+<td>El notebook guarda <code>practica2_model.pkl</code> y
+<code>feature_schema.json</code>.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="repo-2---api-con-fastapi-2.5-puntos">Repo 2 - API con FastAPI
+(2.5 puntos)</h3>
+<table>
+<colgroup>
+<col style="width: 32%" />
+<col style="width: 25%" />
+<col style="width: 41%" />
+</colgroup>
+<thead>
+<tr>
+<th>Criterio</th>
+<th>Puntos</th>
+<th>Descripcion</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Endpoint <code>/model/upload</code></td>
+<td>0.75</td>
+<td>Sube y carga un nuevo <code>.pkl</code>, lo valida y lo deja
+activo.</td>
+</tr>
+<tr>
+<td>Endpoint <code>/predict</code> con intervalo</td>
+<td>1.25</td>
+<td>Devuelve <code>p_default</code>, <code>p_low</code>,
+<code>p_high</code> y <code>decision</code> segun la regla
+<code>p_high - p_low &gt; 0.2</code>.</td>
+</tr>
+<tr>
+<td>Ejecucion local + Swagger</td>
+<td>0.5</td>
+<td><code>uv run uvicorn ...</code> arranca, <code>/docs</code>
+accesible, <code>README</code> con <code>curl</code> de ejemplo.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="calidad-y-entrega-1-punto">Calidad y entrega (1 punto)</h3>
+<table>
+<colgroup>
+<col style="width: 32%" />
+<col style="width: 25%" />
+<col style="width: 41%" />
+</colgroup>
+<thead>
+<tr>
+<th>Criterio</th>
+<th>Puntos</th>
+<th>Descripcion</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Dos URLs entregadas y accesibles</td>
+<td>0.25</td>
+<td>Repo 1 y Repo 2 entregados como repositorios independientes.</td>
+</tr>
+<tr>
+<td>README en cada repo</td>
+<td>0.5</td>
+<td>Cada repo tiene <code>README</code> propio con instrucciones de
+ejecucion en local.</td>
+</tr>
+<tr>
+<td>Reproducibilidad</td>
+<td>0.25</td>
+<td><code>random_state</code> fijado, dependencias congeladas
+(<code>uv.lock</code>), instrucciones claras para reproducir Repo 1 +
+Repo 2.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="fecha-de-entrega">Fecha de entrega</h2>
+<p><strong>Por determinar.</strong></p>
+<hr />
+<h2 id="recursos-utiles">Recursos utiles</h2>
+<ul>
+<li>Notebooks de referencia: <code>09_conformal_prediction.ipynb</code>,
+<code>10_calibracion.ipynb</code>,
+<code>11_optuna_tpe.ipynb</code>.</li>
+<li>Documentacion de <a href="https://optuna.readthedocs.io/">Optuna</a>
+(samplers TPE, pruners Median/Hyperband, multi-objective).</li>
+<li><code>sklearn.calibration.CalibratedClassifierCV</code>,
+<code>sklearn.calibration.calibration_curve</code>.</li>
+<li><code>sklearn.metrics.log_loss</code>,
+<code>sklearn.metrics.brier_score_loss</code>,
+<code>sklearn.metrics.matthews_corrcoef</code>.</li>
+<li>Documentacion de <a href="https://fastapi.tiangolo.com/">FastAPI</a>
+y <a href="https://www.uvicorn.org/">uvicorn</a>.</li>
+</ul>
+</body>
+</html>
