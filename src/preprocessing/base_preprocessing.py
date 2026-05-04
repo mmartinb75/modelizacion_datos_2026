@@ -110,9 +110,9 @@ class BasePreprocess:
         self.text_enc_desc.fit(self.train_X_data['desc_formated'])
     
     def transform(self, data):
-        df = pd.read_csv(data)
-        X_data = df[self.raw_predictors_vars]
-        y_data = df[[self.target_var]]
+        df = data if isinstance(data, pd.DataFrame) else pd.read_csv(data)
+        X_data = df[self.raw_predictors_vars].copy()
+        y_data = df[[self.target_var]] if self.target_var in df.columns else None
 
         # tratamiento de nulls
         X_data = X_data.drop(columns=self.var_with_most_nulls)
@@ -145,9 +145,10 @@ class BasePreprocess:
 
         # tratamiento de variables de texto
         X_text_title = self.text_enc_title.transform(X_data["emp_title"])
-
+        PLACEHOLDER = "DESCONOCIDO >  aa <br>"
+        X_data['desc'] = X_data['desc'].where(X_data['desc'] != 'DESCONOCIDO', PLACEHOLDER)
         X_data['desc_formated'] = np.where(
-            X_data['desc'] == 'DESCONOCIDO',
+            X_data['desc'] == PLACEHOLDER,
             'DESCONOCIDO',
             X_data['desc'].str.split('> ').str[1].str.split('<br>').str[0]
             )
@@ -185,8 +186,8 @@ class BasePreprocess:
                     X_cross_data],
                    axis=1)
         
-        # transformar y_data
-        y_data_out = y_data != 'Fully Paid'
+        # transformar y_data (None si el DataFrame no trae la columna target).
+        y_data_out = (y_data != 'Fully Paid') if y_data is not None else None
         return X_data_ouput, y_data_out
 
 
