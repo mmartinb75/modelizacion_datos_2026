@@ -196,3 +196,10 @@ Datos crudos (1.76M prestamos)
                                            ├── BaseFiltering.fit/transform
                                            └── RandomForest + evaluacion
 ```
+
+## Llama a un servidor http por linea de comandos
+curl
+
+ejemplo:
+
+curl -X POST http://localhost:8000/upload_model/ -F "preprocessing=@preprocessor.pkl" -F "filtering=@filter.pkl" -F "model=@va_cal.pkl"
